@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{C778B702-C0CD-429F-9FDF-BF776C5CA341}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <RootNamespace>Chip8Emulator</RootNamespace>
     <AssemblyName>Chip8Emulator</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
@@ -68,15 +68,21 @@
     <Compile Include="Core\PictureBoxWithInterpolationMode.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Games\Brix.cs" />
     <Compile Include="Games\GameDataLoader.cs" />
     <Compile Include="Games\IGame.cs" />
+    <Compile Include="Games\Invaders.cs" />
     <Compile Include="Games\Tank.cs" />
+    <Compile Include="Games\Tetris.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <EmbeddedResource Include="Roms\TANK" />
+    <EmbeddedResource Include="Roms\BRIX" />
+    <EmbeddedResource Include="Roms\INVADERS" />
+    <EmbeddedResource Include="Roms\TETRIS" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Core\Emulator.resx">

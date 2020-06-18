@@ -31,7 +31,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.pbScreen = new Chip8Emulator.Core.PictureBoxWithInterpolationMode();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadRomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -39,19 +38,13 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tankToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            ((System.ComponentModel.ISupportInitialize)(this.pbScreen)).BeginInit();
+            this.tetrisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.spaceInvadersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pbScreen = new Chip8Emulator.Core.PictureBoxWithInterpolationMode();
+            this.brixToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbScreen)).BeginInit();
             this.SuspendLayout();
-            // 
-            // pbScreen
-            // 
-            this.pbScreen.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-            this.pbScreen.Location = new System.Drawing.Point(0, 24);
-            this.pbScreen.Name = "pbScreen";
-            this.pbScreen.Size = new System.Drawing.Size(640, 320);
-            this.pbScreen.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbScreen.TabIndex = 0;
-            this.pbScreen.TabStop = false;
             // 
             // menuStrip1
             // 
@@ -77,28 +70,31 @@
             // loadRomToolStripMenuItem
             // 
             this.loadRomToolStripMenuItem.Name = "loadRomToolStripMenuItem";
-            this.loadRomToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.loadRomToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
             this.loadRomToolStripMenuItem.Text = "Browse rom";
             this.loadRomToolStripMenuItem.Click += new System.EventHandler(this.loadRomToolStripMenuItem_Click);
             // 
             // restartToolStripMenuItem
             // 
             this.restartToolStripMenuItem.Name = "restartToolStripMenuItem";
-            this.restartToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.restartToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
             this.restartToolStripMenuItem.Text = "Restart";
             this.restartToolStripMenuItem.Click += new System.EventHandler(this.restartToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // gameToolStripMenuItem
             // 
             this.gameToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tankToolStripMenuItem});
+            this.tankToolStripMenuItem,
+            this.tetrisToolStripMenuItem,
+            this.spaceInvadersToolStripMenuItem,
+            this.brixToolStripMenuItem});
             this.gameToolStripMenuItem.Name = "gameToolStripMenuItem";
             this.gameToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
             this.gameToolStripMenuItem.Text = "Game";
@@ -109,6 +105,37 @@
             this.tankToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.tankToolStripMenuItem.Text = "Tank";
             this.tankToolStripMenuItem.Click += new System.EventHandler(this.tankToolStripMenuItem_Click);
+            // 
+            // tetrisToolStripMenuItem
+            // 
+            this.tetrisToolStripMenuItem.Name = "tetrisToolStripMenuItem";
+            this.tetrisToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.tetrisToolStripMenuItem.Text = "Tetris";
+            this.tetrisToolStripMenuItem.Click += new System.EventHandler(this.tetrisToolStripMenuItem_Click);
+            // 
+            // spaceInvadersToolStripMenuItem
+            // 
+            this.spaceInvadersToolStripMenuItem.Name = "spaceInvadersToolStripMenuItem";
+            this.spaceInvadersToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.spaceInvadersToolStripMenuItem.Text = "Space Invaders";
+            this.spaceInvadersToolStripMenuItem.Click += new System.EventHandler(this.spaceInvadersToolStripMenuItem_Click);
+            // 
+            // pbScreen
+            // 
+            this.pbScreen.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+            this.pbScreen.Location = new System.Drawing.Point(0, 24);
+            this.pbScreen.Name = "pbScreen";
+            this.pbScreen.Size = new System.Drawing.Size(640, 320);
+            this.pbScreen.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbScreen.TabIndex = 0;
+            this.pbScreen.TabStop = false;
+            // 
+            // brixToolStripMenuItem
+            // 
+            this.brixToolStripMenuItem.Name = "brixToolStripMenuItem";
+            this.brixToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.brixToolStripMenuItem.Text = "Brix";
+            this.brixToolStripMenuItem.Click += new System.EventHandler(this.brixToolStripMenuItem_Click);
             // 
             // Emulator
             // 
@@ -123,9 +150,9 @@
             this.MinimizeBox = false;
             this.Name = "Emulator";
             this.Text = "Chip 8 Emulator";
-            ((System.ComponentModel.ISupportInitialize)(this.pbScreen)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbScreen)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -140,5 +167,8 @@
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem gameToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tankToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tetrisToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem spaceInvadersToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem brixToolStripMenuItem;
     }
 }

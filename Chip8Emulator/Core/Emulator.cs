@@ -14,7 +14,6 @@ namespace Chip8Emulator.Core
     {
         byte[] ROM;
         Bitmap bootImage;
-        IGame game;
         Dictionary<Keys, byte> keyMapping;
 
         CancellationTokenSource cancellationSource;
@@ -131,6 +130,7 @@ namespace Chip8Emulator.Core
                                      MessageBoxButtons.YesNo);
             if (confirmResult == DialogResult.Yes)
             {
+                Stop();
                 Application.Exit();
             }
         }
@@ -178,12 +178,16 @@ namespace Chip8Emulator.Core
             }
         }
 
-        private void tankToolStripMenuItem_Click(object sender, EventArgs e)
+        private void Restart(IGame game)
         {
-            game = new Tank();
             ROM = game.RomData();
             OverrideKeyMap(game.GetKeyOverride());
             Restart();
+        }
+
+        private void tankToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Restart(new Tank());
         }
 
         private readonly Dictionary<Keys, byte> defaultKeyMap = new Dictionary<Keys, byte>
@@ -205,5 +209,20 @@ namespace Chip8Emulator.Core
             { Keys.C, 0xB },
             { Keys.V, 0xF },
         };
+
+        private void tetrisToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Restart(new Tetris());
+        }
+
+        private void spaceInvadersToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Restart(new Invaders());
+        }
+
+        private void brixToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Restart(new Brix());
+        }
     }
 }
