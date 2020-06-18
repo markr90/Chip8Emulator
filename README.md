@@ -22,4 +22,4 @@ Solution can be built in Visual Studio. Games can be run from either the inbuilt
 
 ## CPU clock design
 
-Cpu runs at 540 Hz. A stopwatch is used to render the images at 60 Hz. Every framerate cycle the CPU will calculate 540 / 60 = 9 cpu cycles. 
+Cpu runs at 540 Hz. A stopwatch keeps track of when a cpu cycle has passed and when a frame needs to be rendered (60Hz). 

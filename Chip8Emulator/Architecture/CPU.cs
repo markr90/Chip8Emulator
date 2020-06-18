@@ -44,19 +44,8 @@ namespace Chip8Emulator.Architecture
 
         public void RunCycle()
         {
-            int cycles = 0;
 
-            if (_isRunning)
-            {
-                while (cycles < nCycles)
-                {
-                    ExecuteNextInstruction();
-                    cycles++;
-                }
-            }
-
-            // timers need to be rendered at 60 Hz, should be outside the cpu loop
-            Timer.UpdateTimers();
+            ExecuteNextInstruction();
         }
 
         private void ExecuteNextInstruction()

@@ -21,7 +21,7 @@ namespace Chip8Emulator.Core
         private const int Clockspeed = 540; // 540 Hz gives exactly 9 clock cycles per frame
         CPU cpu = new CPU(Clockspeed);
         private Thread cpuThread;
-        Clock clock = new Clock();
+        Clock clock = new Clock(Clockspeed);
 
         public Emulator()
         {
@@ -114,9 +114,14 @@ namespace Chip8Emulator.Core
 
         private void RunCpuCycle()
         {
-            if (clock.HasFrameElapsed())
+            if (clock.HasCycleElapsed())
             {
                 cpu.RunCycle();
+            }
+            if (clock.HasFrameElapsed())
+            {
+                // timers and graphics need to be rendered at 60 Hz, should be outside the cpu loop
+                this.Invoke(new Action(() => cpu.Timer.UpdateTimers()));
                 this.Invoke(new Action(() => Render()));
             }
         }
