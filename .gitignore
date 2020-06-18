@@ -1,0 +1,5 @@
+.vs/
+Chip8Emulator/bin/
+Chip8Emulator/obj/
+Chip8Emulator/Properties/
+packages/
