@@ -68,11 +68,15 @@
     <Compile Include="Core\PictureBoxWithInterpolationMode.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Games\GameDataLoader.cs" />
+    <Compile Include="Games\IGame.cs" />
+    <Compile Include="Games\Tank.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <EmbeddedResource Include="Roms\TANK" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Core\Emulator.resx">
@@ -82,5 +86,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Chip8Logo.bmp" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -6,29 +6,27 @@ namespace Chip8Emulator.Core
     class Clock
     {
         private System.Diagnostics.Stopwatch aStopwatch = new System.Diagnostics.Stopwatch();
+        readonly TimeSpan targetElapsedTime60Hz = TimeSpan.FromTicks(TimeSpan.TicksPerSecond / InternalTimer.Frequency);
+        TimeSpan lastTime;
 
         public void Start()
         {
             aStopwatch.Start();
         }
 
-        public void Stop()
-        {
-            aStopwatch.Reset();
-        }
-
         public void Reset()
         {
             aStopwatch.Reset();
+            lastTime = TimeSpan.Zero;
         }
 
         public bool HasFrameElapsed()
         {
-            TimeSpan ts = aStopwatch.Elapsed;
-            if (ts.Milliseconds >= 1000.0 / InternalTimer.Frequency)
+            TimeSpan currentTime = aStopwatch.Elapsed;
+            var elapsed = currentTime - lastTime;
+            if (elapsed >= targetElapsedTime60Hz)
             {
-                aStopwatch.Reset();
-                aStopwatch.Start();
+                lastTime += targetElapsedTime60Hz;
                 return true;
             }
             else

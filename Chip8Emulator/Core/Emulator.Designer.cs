@@ -37,6 +37,8 @@
             this.loadRomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.restartToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tankToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pbScreen)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -54,7 +56,8 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem});
+            this.fileToolStripMenuItem,
+            this.gameToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(640, 24);
@@ -75,7 +78,7 @@
             // 
             this.loadRomToolStripMenuItem.Name = "loadRomToolStripMenuItem";
             this.loadRomToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.loadRomToolStripMenuItem.Text = "Load rom";
+            this.loadRomToolStripMenuItem.Text = "Browse rom";
             this.loadRomToolStripMenuItem.Click += new System.EventHandler(this.loadRomToolStripMenuItem_Click);
             // 
             // restartToolStripMenuItem
@@ -91,6 +94,21 @@
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
+            // gameToolStripMenuItem
+            // 
+            this.gameToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tankToolStripMenuItem});
+            this.gameToolStripMenuItem.Name = "gameToolStripMenuItem";
+            this.gameToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
+            this.gameToolStripMenuItem.Text = "Game";
+            // 
+            // tankToolStripMenuItem
+            // 
+            this.tankToolStripMenuItem.Name = "tankToolStripMenuItem";
+            this.tankToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.tankToolStripMenuItem.Text = "Tank";
+            this.tankToolStripMenuItem.Click += new System.EventHandler(this.tankToolStripMenuItem_Click);
             // 
             // Emulator
             // 
@@ -120,5 +138,7 @@
         private System.Windows.Forms.ToolStripMenuItem loadRomToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem restartToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem gameToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tankToolStripMenuItem;
     }
 }

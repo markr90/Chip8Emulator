@@ -7,7 +7,6 @@ namespace Chip8Emulator.Architecture
 {
     public class GraphicsProcessor
     {
-        private readonly Bitmap screen;
         public const int ScreenWidth = 64, ScreenHeight = 32;
         private bool[,] _pixels;
         private Color _color = Color.FromArgb(255, 0, 255, 0);
@@ -15,7 +14,6 @@ namespace Chip8Emulator.Architecture
 
         public GraphicsProcessor()
         {
-            screen = new Bitmap(ScreenWidth, ScreenHeight);
             _pixels = new bool[64, 32];
         }
 
@@ -54,8 +52,9 @@ namespace Chip8Emulator.Architecture
             Console.WriteLine(s);
         }
 
-        public void Draw(PictureBoxWithInterpolationMode pbScreen)
+        public Bitmap Draw()
         {
+            Bitmap screen = new Bitmap(ScreenWidth, ScreenHeight);
             for (var y = 0; y < screen.Height; y++)
             {
                 for (var x = 0; x < screen.Width; x++)
@@ -66,7 +65,7 @@ namespace Chip8Emulator.Architecture
                         screen.SetPixel(x, y, _bgColor);
                 }
             }
-            pbScreen.Image = screen;
+            return screen;
         }
 
     }

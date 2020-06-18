@@ -18,6 +18,7 @@ namespace Chip8Emulator.Architecture
         public bool HasRomLoaded { get; private set; }
 
         private int nCycles;
+        private bool _isRunning;
 
         public byte SP;   
         public ushort PC { get; private set; } // program counter
@@ -30,6 +31,7 @@ namespace Chip8Emulator.Architecture
 
         public void Initialize()
         {
+            _isRunning = true;
             PC = 0x200; // PC should start at 0x200 not at 0
             I = 0;
             SP = 0;
@@ -44,11 +46,13 @@ namespace Chip8Emulator.Architecture
         {
             int cycles = 0;
 
-            while (cycles < nCycles)
+            if (_isRunning)
             {
-                ExecuteNextInstruction();
-                cycles++;
-                // Store key press
+                while (cycles < nCycles)
+                {
+                    ExecuteNextInstruction();
+                    cycles++;
+                }
             }
 
             // timers need to be rendered at 60 Hz, should be outside the cpu loop
@@ -58,7 +62,11 @@ namespace Chip8Emulator.Architecture
         private void ExecuteNextInstruction()
         {
             OpCode opcode = FetchOpCode();
-            Instruction instruction = Decoder.FetchInstruction(opcode);
+            Instruction instruction;
+            lock (opcode)
+            {
+                instruction = Decoder.FetchInstruction(opcode);
+            }
             instruction(opcode, this);
         }
 
@@ -81,6 +89,11 @@ namespace Chip8Emulator.Architecture
                 Memory.Write((ushort)(5 * i + 3), (byte)((Font.Set[i] >> (8 * 1)) & 0xF0));
                 Memory.Write((ushort)(5 * i + 4), (byte)((Font.Set[i] >> (8 * 0)) & 0xF0));
             }
+        }
+        
+        public void Stop()
+        {
+            _isRunning = false;
         }
 
         public void LoadRom(byte[] rom)

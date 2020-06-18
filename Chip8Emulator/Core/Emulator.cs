@@ -6,25 +6,33 @@ using Chip8Emulator.Architecture;
 using System.Threading;
 using System.Collections.Generic;
 using System.Reflection;
+using Chip8Emulator.Games;
 
 namespace Chip8Emulator.Core
 {
     public partial class Emulator : Form
     {
-        private string ROM = @"../../../Roms/IBM_Logo.ch8";
+        byte[] ROM;
         Bitmap bootImage;
+        IGame game;
+        Dictionary<Keys, byte> keyMapping;
+
+        CancellationTokenSource cancellationSource;
 
         private const int Clockspeed = 540; // 540 Hz gives exactly 9 clock cycles per frame
         CPU cpu = new CPU(Clockspeed);
         private Thread cpuThread;
         Clock clock = new Clock();
-        private bool _isRunning = false;
 
         public Emulator()
         {
+            keyMapping = defaultKeyMap;
             InitializeComponent();
             InitBootImage();
             pbScreen.Image = bootImage;
+
+            string[] filenames = Assembly.GetExecutingAssembly().GetManifestResourceNames();
+            Console.WriteLine("{0}", string.Join(",", filenames));
 
             cpu = new CPU(Clockspeed);
             cpu.Initialize();
@@ -53,23 +61,24 @@ namespace Chip8Emulator.Core
         
         private void Start()
         {
-            _isRunning = true;
+            cpu.Initialize();
+            LoadRom();
+            cancellationSource = new CancellationTokenSource();
             clock.Start();
-            cpuThread = new Thread(RunLoop);
+            cpuThread = new Thread(() => RunLoop(cancellationSource.Token));
             cpuThread.Start();
         }
 
         private void Stop()
         {
-            clock.Stop();
-            _isRunning = false;
+            cancellationSource?.Cancel();
+            cpu.Stop();
+            clock.Reset();
         }
 
         private void Restart()
         {
             Stop();
-            cpu.Initialize();
-            LoadRom();
             Start();
         }
 
@@ -77,7 +86,7 @@ namespace Chip8Emulator.Core
         {
             try
             {
-                cpu.LoadRom(File.ReadAllBytes(ROM));
+                cpu.LoadRom(ROM);
             }
             catch
             {
@@ -88,14 +97,18 @@ namespace Chip8Emulator.Core
             }
         }
 
-        public void RunLoop()
+        public void RunLoop(CancellationToken token)
         {
             if (!cpu.HasRomLoaded)
             {
                 return;
             }
-            while (_isRunning)
+            while (true)
             {
+                if (token.IsCancellationRequested)
+                {
+                    return;
+                }
                 RunCpuCycle();
             }
         }
@@ -105,29 +118,11 @@ namespace Chip8Emulator.Core
             if (clock.HasFrameElapsed())
             {
                 cpu.RunCycle();
-                cpu.Graphics.Draw(pbScreen);
+                this.Invoke(new Action(() => Render()));
             }
         }
 
-        private Dictionary<Keys, byte> keyMapping = new Dictionary<Keys, byte> 
-        {
-            { Keys.D1, 0x1 },
-            { Keys.D2, 0x2 },
-            { Keys.D3, 0x3 },
-            { Keys.D4, 0xC },
-            { Keys.Q, 0x4 },
-            { Keys.W, 0x5 },
-            { Keys.E, 0x6 },
-            { Keys.R, 0xD },
-            { Keys.A, 0x7 },
-            { Keys.S, 0x8 },
-            { Keys.D, 0x9 },
-            { Keys.F, 0xE },
-            { Keys.Z, 0xA },
-            { Keys.X, 0x0 },
-            { Keys.C, 0xB },
-            { Keys.V, 0xF },
-        };
+        private void Render() => this.pbScreen.Image = cpu.Graphics.Draw();
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -155,14 +150,60 @@ namespace Chip8Emulator.Core
         {
             var openFileDialog = new System.Windows.Forms.OpenFileDialog();
             openFileDialog.Title = "Browse ROM files";
-            openFileDialog.DefaultExt = "ch8";
-            openFileDialog.Filter = "Rom Files|*.ch8";
             
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                ROM = openFileDialog.FileName;
-                Restart();
+                try
+                {
+                    ROM = File.ReadAllBytes(openFileDialog.FileName);
+                    keyMapping = new Dictionary<Keys, byte>(defaultKeyMap);
+                    Restart();
+                }
+                catch
+                {
+
+                }
             }
         }
+
+        private void OverrideKeyMap(Dictionary<Keys, byte> newMap)
+        {
+            keyMapping = new Dictionary<Keys, byte>(defaultKeyMap);
+            foreach (KeyValuePair<Keys, byte> kv in newMap)
+            {
+                if (keyMapping.ContainsKey(kv.Key))
+                    keyMapping[kv.Key] = kv.Value;
+                else
+                    keyMapping.Add(kv.Key, kv.Value);
+            }
+        }
+
+        private void tankToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            game = new Tank();
+            ROM = game.RomData();
+            OverrideKeyMap(game.GetKeyOverride());
+            Restart();
+        }
+
+        private readonly Dictionary<Keys, byte> defaultKeyMap = new Dictionary<Keys, byte>
+        {
+            { Keys.D1, 0x1 },
+            { Keys.D2, 0x2 },
+            { Keys.D3, 0x3 },
+            { Keys.D4, 0xC },
+            { Keys.Q, 0x4 },
+            { Keys.W, 0x5 },
+            { Keys.E, 0x6 },
+            { Keys.R, 0xD },
+            { Keys.A, 0x7 },
+            { Keys.S, 0x8 },
+            { Keys.D, 0x9 },
+            { Keys.F, 0xE },
+            { Keys.Z, 0xA },
+            { Keys.X, 0x0 },
+            { Keys.C, 0xB },
+            { Keys.V, 0xF },
+        };
     }
 }
