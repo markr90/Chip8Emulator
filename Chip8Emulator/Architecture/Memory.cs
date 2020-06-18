@@ -35,5 +35,18 @@ namespace Chip8Emulator.Architecture
             }
         }
 
+        public void Clear()
+        {
+            Array.Clear(_memory, 0, _memory.Length);
+        }
+
+        public void DumpConsole()
+        {
+            for (int i = 0x200; i < _memory.Length; i++)
+            {
+                Console.WriteLine("{0}: {1}", i, Read((ushort) i));
+            }
+        }
+
     }
 }

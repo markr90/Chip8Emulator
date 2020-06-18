@@ -14,6 +14,9 @@ namespace Chip8Emulator.Architecture
 
         public static void ClearOrReturn(OpCode opcode, CPU cpu)
         {
+#if DEBUG
+            DebugInfo(opcode, System.Reflection.MethodBase.GetCurrentMethod().Name);
+#endif
             if (opcode.NN == 0xE0)
             {
                 cpu.Graphics.Reset();
@@ -24,24 +27,36 @@ namespace Chip8Emulator.Architecture
             }
         }
 
-        public static void Jump(OpCode opCode, CPU cpu)
+        public static void Jump(OpCode opcode, CPU cpu)
         {
-            cpu.Jump(opCode.NNN);
+#if DEBUG
+            DebugInfo(opcode, System.Reflection.MethodBase.GetCurrentMethod().Name);
+#endif
+            cpu.Jump(opcode.NNN);
         }
 
-        public static void JumpWithOffset(OpCode opCode, CPU cpu)
+        public static void JumpWithOffset(OpCode opcode, CPU cpu)
         {
-            cpu.Jump((ushort)(opCode.NNN + cpu.RegisterBank.Get(V0)));
+#if DEBUG
+            DebugInfo(opcode, System.Reflection.MethodBase.GetCurrentMethod().Name);
+#endif
+            cpu.Jump((ushort)(opcode.NNN + cpu.RegisterBank.Get(V0)));
         }
 
         public static void CallSubroutine(OpCode opcode, CPU cpu)
         {
+#if DEBUG
+            DebugInfo(opcode, System.Reflection.MethodBase.GetCurrentMethod().Name);
+#endif
             cpu.Push(cpu.PC);
             cpu.Jump(opcode.NNN);
         }
 
         public static void SkipIfXEqual(OpCode opcode, CPU cpu)
         {
+#if DEBUG
+            DebugInfo(opcode, System.Reflection.MethodBase.GetCurrentMethod().Name);
+#endif
             if (cpu.RegisterBank.Get(opcode.X) == opcode.NN)
             {
                 cpu.SkipInstruction();
@@ -50,6 +65,9 @@ namespace Chip8Emulator.Architecture
 
         public static void SkipIfXNotEqual(OpCode opcode, CPU cpu)
         {
+#if DEBUG
+            DebugInfo(opcode, System.Reflection.MethodBase.GetCurrentMethod().Name);
+#endif
             if (cpu.RegisterBank.Get(opcode.X) != opcode.NN)
             {
                 cpu.SkipInstruction();
@@ -58,6 +76,9 @@ namespace Chip8Emulator.Architecture
 
         public static void SkipIfXEqualsY(OpCode opcode, CPU cpu)
         {
+#if DEBUG
+            DebugInfo(opcode, System.Reflection.MethodBase.GetCurrentMethod().Name);
+#endif
             if (cpu.RegisterBank.Get(opcode.X) == cpu.RegisterBank.Get(opcode.Y))
             {
                 cpu.SkipInstruction();
@@ -66,6 +87,9 @@ namespace Chip8Emulator.Architecture
 
         public static void SkipIfXNotEqualsY(OpCode opcode, CPU cpu)
         {
+#if DEBUG
+            DebugInfo(opcode, System.Reflection.MethodBase.GetCurrentMethod().Name);
+#endif
             if (cpu.RegisterBank.Get(opcode.X) != cpu.RegisterBank.Get(opcode.Y))
             {
                 cpu.SkipInstruction();
@@ -75,38 +99,57 @@ namespace Chip8Emulator.Architecture
         public static void SetX(OpCode opcode, CPU cpu)
         {
             cpu.RegisterBank.Set(opcode.X, opcode.NN);
+#if DEBUG
+            DebugInfo(opcode, System.Reflection.MethodBase.GetCurrentMethod().Name);
+            //Console.WriteLine("X = 0x{0:x2} (0x{1:x2})", cpu.RegisterBank.Get(opcode.X), opcode.NN);
+#endif
         }
 
         public static void AddX(OpCode opcode, CPU cpu)
         {
-            byte result = (byte)(cpu.RegisterBank.Get(opcode.X) + opcode.NN);
+            byte x = cpu.RegisterBank.Get(opcode.X);
+            byte result = (byte)(x + opcode.NN);
             cpu.RegisterBank.Set(opcode.X, result);
+#if DEBUG
+            DebugInfo(opcode, System.Reflection.MethodBase.GetCurrentMethod().Name);
+            Console.WriteLine("X = {0} = X ({1}) + NN ({2})", cpu.RegisterBank.Get(opcode.X), x, opcode.NN);
+#endif
         }
 
-        public static void SetI(OpCode opCode, CPU cpu)
+        public static void SetI(OpCode opcode, CPU cpu)
         {
-            cpu.SetI(opCode.NNN);
+            cpu.SetI(opcode.NNN);
+#if DEBUG
+            DebugInfo(opcode, System.Reflection.MethodBase.GetCurrentMethod().Name);
+#endif
         }
 
         public static void SetXRandom(OpCode opcode, CPU cpu)
         {
-            cpu.RegisterBank.Set(opcode.X, NextRandom());
+            cpu.RegisterBank.Set(opcode.X, (byte)(NextRandom() & opcode.NN));
+#if DEBUG
+            DebugInfo(opcode, System.Reflection.MethodBase.GetCurrentMethod().Name);
+#endif
         }
 
         public static void DrawSprite(OpCode opcode, CPU cpu)
         {
+#if DEBUG
+            DebugInfo(opcode, System.Reflection.MethodBase.GetCurrentMethod().Name);
+#endif
             byte startx = cpu.RegisterBank.Get(opcode.X);
             byte starty = cpu.RegisterBank.Get(opcode.Y);
-            byte n = cpu.RegisterBank.Get(opcode.N);
+            byte n = opcode.N;
 
+            cpu.RegisterBank.Set(Register.VF, 0);
             for (byte i = 0; i < n; i++)
             {
                 var spriteLine = cpu.Memory.Read((ushort)(cpu.I + i));
 
                 for (var bit = 0; bit < 8; bit++)
                 {
-                    var x = (startx + bit) % Graphics.ScreenWidth;
-                    var y = (starty + i) % Graphics.ScreenHeight;
+                    var x = (startx + bit) % GraphicsProcessor.ScreenWidth;
+                    var y = (starty + i) % GraphicsProcessor.ScreenHeight;
 
                     bool spriteBit = ((spriteLine >> (7 - bit)) & 1) != 0;
                     bool curBit = cpu.Graphics.Pixel(x, y);
@@ -116,14 +159,15 @@ namespace Chip8Emulator.Architecture
 
                     if (curBit && !newBit)
                         cpu.RegisterBank.Set(Register.VF, 1);
-
                 }
             }
-
         }
 
         public static void SkipOnKey(OpCode opcode, CPU cpu)
         {
+#if DEBUG
+            DebugInfo(opcode, System.Reflection.MethodBase.GetCurrentMethod().Name);
+#endif
             byte x = cpu.RegisterBank.Get(opcode.X);
             if (opcode.NN == 0x9E)
             {
@@ -139,6 +183,9 @@ namespace Chip8Emulator.Architecture
 
         public static void GetArithmetic(OpCode opcode, CPU cpu)
         {
+#if DEBUG
+            DebugInfo(opcode, System.Reflection.MethodBase.GetCurrentMethod().Name);
+#endif
             switch (opcode.N)
             {
                 case 0x0:
@@ -173,79 +220,71 @@ namespace Chip8Emulator.Architecture
             }
         }
 
-        public static void Misc(OpCode opcode, CPU cpu)
-        {
-            switch (opcode.NN)
-            {
-                case 0x07:
-                    SetXToDelay(opcode, cpu);
-                    break;
-                case 0x0A:
-                    WaitForKey(opcode, cpu);
-                    break;
-                case 0x15:
-                    SetDelayTimer(opcode, cpu);
-                    break;
-                case 0x18:
-                    SetSoundTimer(opcode, cpu);
-                    break;
-                case 0x1E:
-                    AddToMemAddress(opcode, cpu);
-                    break;
-                case 0x29:
-                    SetItoSpriteAddress(opcode, cpu);
-                    break;
-                case 0x33:
-                    StoreBCD(opcode, cpu);
-                    break;
-                case 0x55:
-                    RegDump(opcode, cpu);
-                    break;
-                case 0x65:
-                    RegLoad(opcode, cpu);
-                    break;
-                default:
-                    throw new InvalidOperationException(string.Format("INVALID_OP_CODE: {0}", opcode.Code));
-            }
-        }
-
         public static void SetXToDelay(OpCode opcode, CPU cpu)
         {
+#if DEBUG
+            DebugInfo(opcode, System.Reflection.MethodBase.GetCurrentMethod().Name);
+#endif
             cpu.RegisterBank.Set(opcode.X, cpu.Timer.GetDelay());
         }
 
         public static void WaitForKey(OpCode opcode, CPU cpu)
         {
-            byte key = cpu.WaitForKeyPress();
-            cpu.RegisterBank.Set(opcode.X, key);
+#if DEBUG
+            DebugInfo(opcode, System.Reflection.MethodBase.GetCurrentMethod().Name);
+#endif
+            if (cpu.AnyKeyPressed())
+            {
+                byte key = cpu.GetKeyPress();
+                cpu.RegisterBank.Set(opcode.X, key);
+            }
+            else
+            {
+                cpu.JumpBackOneInstruction();
+            }
         }
 
         public static void SetDelayTimer(OpCode opcode, CPU cpu)
         {
+#if DEBUG
+            DebugInfo(opcode, System.Reflection.MethodBase.GetCurrentMethod().Name);
+#endif
             byte x = cpu.RegisterBank.Get(opcode.X);
             cpu.Timer.SetDelay(x);
         }
 
         public static void SetSoundTimer(OpCode opcode, CPU cpu)
         {
+#if DEBUG
+            DebugInfo(opcode, System.Reflection.MethodBase.GetCurrentMethod().Name);
+#endif
             byte x = cpu.RegisterBank.Get(opcode.X);
             cpu.Timer.SetSound(x);
         }
 
-        public static void AddToMemAddress(OpCode opCode, CPU cpu)
+        public static void AddToMemAddress(OpCode opcode, CPU cpu)
         {
-            byte x = cpu.RegisterBank.Get(opCode.X);
-            cpu.SetIRelative(x);
+#if DEBUG
+            DebugInfo(opcode, System.Reflection.MethodBase.GetCurrentMethod().Name);
+#endif
+            byte x = cpu.RegisterBank.Get(opcode.X);
+            cpu.SetI((ushort) (cpu.I + x));
         }
 
         public static void SetItoSpriteAddress(OpCode opcode, CPU cpu)
         {
+#if DEBUG
+            DebugInfo(opcode, System.Reflection.MethodBase.GetCurrentMethod().Name);
+#endif
             byte x = cpu.RegisterBank.Get(opcode.X);
             cpu.SetI((ushort) (x * 5));
         }
 
         public static void StoreBCD(OpCode opcode, CPU cpu)
         {
+#if DEBUG
+            DebugInfo(opcode, System.Reflection.MethodBase.GetCurrentMethod().Name);
+#endif
             ushort address = cpu.I;
             byte x = cpu.RegisterBank.Get(opcode.X);
             cpu.Memory.Write((ushort) (address + 0), (byte)((x / 100) % 10));
@@ -260,6 +299,9 @@ namespace Chip8Emulator.Architecture
             {
                 cpu.Memory.Write((ushort)(addressStart + i), cpu.RegisterBank.Get(i));
             }
+#if DEBUG
+            DebugInfo(opcode, System.Reflection.MethodBase.GetCurrentMethod().Name);
+#endif
         }
 
         public static void RegLoad(OpCode opcode, CPU cpu)
@@ -269,6 +311,14 @@ namespace Chip8Emulator.Architecture
             {
                 cpu.RegisterBank.Set(i, cpu.Memory.Read((ushort)(addressStart + i)));
             }
+#if DEBUG
+            DebugInfo(opcode, System.Reflection.MethodBase.GetCurrentMethod().Name);
+#endif
+        }
+
+        private static void DebugInfo(OpCode opcode, string mnemonic)
+        {
+            Console.WriteLine("OP 0x{0:x4} : {1}", opcode.Code, mnemonic);
         }
     }
 }

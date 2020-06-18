@@ -43,9 +43,9 @@ namespace Chip8Emulator.Architecture
 
             // Set carry flag
             if (result > 0xFF)
-            {
                 cpu.RegisterBank.Set(Register.VF, 1);
-            }
+            else
+                cpu.RegisterBank.Set(Register.VF, 0);
 
             cpu.RegisterBank.Set(opcode.X, (byte)result);
         }
@@ -57,10 +57,10 @@ namespace Chip8Emulator.Architecture
             int result = x - y;
 
             // Set carry flag
-            if (result < 0)
-            {
+            if (x > y)
+                cpu.RegisterBank.Set(Register.VF, 1);
+            else
                 cpu.RegisterBank.Set(Register.VF, 0);
-            }
 
             cpu.RegisterBank.Set(opcode.X, (byte)result);
         }
@@ -70,7 +70,7 @@ namespace Chip8Emulator.Architecture
             byte x = cpu.RegisterBank.Get(opcode.X);
             int flag = x & 0x1;
             cpu.RegisterBank.Set(Register.VF, (byte)flag);
-            x = (byte)(x >> 1);
+            x = (byte) (x / 2);
             cpu.RegisterBank.Set(opcode.X, x);
         }
 
@@ -81,10 +81,10 @@ namespace Chip8Emulator.Architecture
             int result = y - x;
 
             // Set carry flag
-            if (result < 0)
-            {
+            if (y > x)
+                cpu.RegisterBank.Set(Register.VF, 1);
+            else
                 cpu.RegisterBank.Set(Register.VF, 0);
-            }
 
             cpu.RegisterBank.Set(opcode.X, (byte)result);
         }
@@ -94,7 +94,7 @@ namespace Chip8Emulator.Architecture
             byte x = cpu.RegisterBank.Get(opcode.X);
             int flag = ((x & (1 << 7)) != 0) ? 1 : 0;
             cpu.RegisterBank.Set(Register.VF, (byte)flag);
-            x = (byte)(x << 1);
+            x = (byte)(x * 2);
             cpu.RegisterBank.Set(opcode.X, x);
         }
     }

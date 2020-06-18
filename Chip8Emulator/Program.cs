@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Chip8Emulator.Core;
+using System;
+using System.Windows.Forms;
 
 namespace Chip8Emulator
 {
     class Program
     {
-        static void Main(string[] args)
+        [STAThread]
+        static void Main()
         {
-            Console.WriteLine("{0}", 128 & 0x80);
-
-            Console.ReadLine();
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new Emulator());
         }
     }
 }

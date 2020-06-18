@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Chip8Emulator.Architecture
 {
-    public class Timer
+    public class InternalTimer
     {
         public const int Frequency = 60;
         private byte Delay;
@@ -30,6 +30,14 @@ namespace Chip8Emulator.Architecture
         public byte GetSound(byte value)
         {
             return Sound;
+        }
+
+        public void UpdateTimers()
+        {
+            if (Delay > 0)
+                Delay--;
+            if (Sound > 0)
+                Sound--;
         }
     }
 }

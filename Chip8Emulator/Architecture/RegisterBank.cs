@@ -1,5 +1,7 @@
 ﻿
 
+using System;
+
 namespace Chip8Emulator.Architecture
 {
     public class RegisterBank
@@ -23,6 +25,11 @@ namespace Chip8Emulator.Architecture
         public void Set(Register r, byte b)
         {
             _registers[(int) r] = b;
+        }
+
+        public void Clear()
+        {
+            Array.Clear(_registers, 0, _registers.Length);
         }
     }
 

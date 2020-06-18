@@ -32,9 +32,14 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -44,19 +49,38 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Architecture\Arithmetic.cs" />
+    <Compile Include="Architecture\Fontset.cs" />
     <Compile Include="Architecture\Operations.cs" />
     <Compile Include="Architecture\CPU.cs" />
     <Compile Include="Architecture\Decoder.cs" />
-    <Compile Include="Architecture\Graphics.cs" />
+    <Compile Include="Architecture\GraphicsProcessor.cs" />
     <Compile Include="Architecture\Memory.cs" />
     <Compile Include="Architecture\OpCode.cs" />
     <Compile Include="Architecture\RegisterBank.cs" />
-    <Compile Include="Architecture\Timer.cs" />
+    <Compile Include="Architecture\InternalTimer.cs" />
+    <Compile Include="Core\Clock.cs" />
+    <Compile Include="Core\Emulator.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Core\Emulator.Designer.cs">
+      <DependentUpon>Emulator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Core\PictureBoxWithInterpolationMode.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Core\Emulator.resx">
+      <DependentUpon>Emulator.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Chip8Logo.bmp" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
