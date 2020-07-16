@@ -1,5 +1,7 @@
 # Chip 8 Emulator in C#
 
+![Alt text](screenshot.jpg?raw=true "Space Invaders")
+
 A chip-8 emulator built in C# (sound not implemented). Included are four games with additional keybindings mapped for a more intuitive experience. 
 
 - Tetris
