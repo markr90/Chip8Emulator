@@ -2,7 +2,7 @@
 
 ![Alt text](screenshot.jpg?raw=true "Space Invaders")
 
-A chip-8 emulator built in C# (sound not implemented). Included are four games with additional keybindings mapped for a more intuitive experience. 
+A chip-8 emulator built in C#, project is .NET Framework 4.7.2. Included are four games with additional keybindings mapped for a more intuitive experience. 
 
 - Tetris
 - Space invaders
@@ -20,7 +20,7 @@ Z X C V
 
 ## How to use
 
-Solution can be built in Visual Studio. Games can be run from either the inbuilt games or external roms using the menu bar.
+Solution can be built in Visual Studio. You will need .NET Framework 4.7.2 to build the project. Games can be run from either the inbuilt games or external roms using the menu bar. 
 
 ## CPU clock design
 
